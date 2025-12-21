@@ -1,0 +1,119 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#main,
+#main-saved {
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    background-color: #616161;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#addBtn,
+#saved-addBtn {
+    position: fixed;
+    left: 18px;
+    top: 3%;
+    background-color: #5e4b005a;
+    color: white;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 100px;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffba42;
+    margin-top: 0px;
+}
+
+.note {
+    width: 380px;
+    height: 260px;
+    background-color: transparent; /* Removed white */
+    margin: 15px;
+    margin-top: 5%;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-bottom: 30px;
+    box-shadow: none; /* No shadow box */
+    padding: 0; /* Remove inner padding to avoid white edge */
+    border: none;
+}
+
+.icons {
+    width: 100%;
+    background-color: #d0b774;
+    color: white;
+    padding: 5px;
+    display: flex;
+    justify-content: start;
+    border-radius: 10px 10px 0px 0px;
+    border: 2px dashed #cb8607;
+}
+
+.icons i {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.note textarea {
+    border: none;
+    width: 100%;
+    height: 87%;
+    resize: none;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 0px 0px 10px 10px;
+background-color: #f4e2d1; /* Keep this if you like light content area */
+    font-family: inherit;
+}
+
+.title-div textarea {
+    border-radius: 0;
+    margin-bottom: -4px;
+    background-color: #cb8607;
+    font-weight: lighter;
+    font-size: large;
+    font-family: inherit;
+}
+
+.heading {
+    position: initial;
+    margin-top: 1%;
+    color: #616161;
+}
+
+.note textarea:focus {
+    border: none;
+    outline: none;
+}
+
+/* Remove or comment these as they are not being used or are duplicating styles */
+.note-card,
+.note-card:hover,
+.note-card h3,
+.note-card p {
+    display: none;
+}
+
+.saved-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.saved-content {
+    font-size: 1em;
+    color: #444;
+    white-space: pre-wrap;
+    margin-top: 8px;
+}

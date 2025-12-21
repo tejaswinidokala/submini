@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MEMOSUB</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #5e5e5e;
+            color: white;
+        }
+
+        header {
+            background-color: #f4ac3e;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #c88c26;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+            color: #333;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+            text-align: center;
+            flex-grow: 1;
+            color: #444;
+        }
+
+        .btn {
+            background-color: #c88c26;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #b2771e;
+        }
+
+        .btn-left {
+            margin-left: 10px;
+        }
+
+        .btn-right {
+            margin-right: 10px;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        #note-form {
+            display: none;
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .note-card {
+            background-color: #fff;
+            color: #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .note-card h3 {
+            margin-top: 0;
+        }
+
+        .note-card button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .top-left, .top-right {
+            width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-left">
+            <button class="btn btn-left" onclick="toggleForm()">➕ Add Note</button>
+        </div>
+        <div>
+            <h1>*MEMOSUB*</h1>
+            <h2>Memory is all we are.</h2>
+        </div>
+        <div class="top-right" style="text-align: right;">
+            <a href="/saved-notes/">
+                <button class="btn btn-right"> Saved Notes</button>
+            </a>
+        </div>
+    </header>
+
+    <div class="main">
+        <div id="note-form">
+            <input type="text" id="title" placeholder="Title">
+            <textarea id="content" rows="5" placeholder="Content"></textarea>
+            <button class="btn" onclick="addNote()">Add Note</button>
+        </div>
+
+        <div id="notes-section">
+            <!-- Unsaved notes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const form = document.getElementById("note-form");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        function addNote() {
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+
+            if (!title.trim() || !content.trim()) return;
+
+            const noteEl = document.createElement("div");
+            noteEl.className = "note-card";
+            noteEl.innerHTML = `
+                <h3>${title}</h3>
+                <p>${content}</p>
+                <button class="btn" onclick="saveNote(this)">Save</button>
+            `;
+
+            document.getElementById("notes-section").appendChild(noteEl);
+
+            // Clear form
+            document.getElementById("title").value = '';
+            document.getElementById("content").value = '';
+            toggleForm();
+        }
+
+        function saveNote(button) {
+            const noteCard = button.parentElement;
+            const title = noteCard.querySelector("h3").innerText;
+            const content = noteCard.querySelector("p").innerText;
+
+            fetch('/api/save_note/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ title, content })
+            })
+            .then(response => {
+                if (response.ok) {
+                    noteCard.remove();  // Remove from index page
+                } else {
+                    alert("Failed to save note.");
+                }
+            });
+        }
+
+        function getCSRFToken() {
+            let name = 'csrftoken';
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+
+</body>
+</html>
